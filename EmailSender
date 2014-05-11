@@ -1,0 +1,46 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
+using System.Web;
+using System.Net;
+using System.Net.Mail;
+using System.Text.RegularExpressions;
+
+namespace AspWebUtils
+{
+    public class EmailSender
+    {
+        public static void SMTPSend(string EmailTo, string EmailSubject, string EmailBody)
+        {
+            var MyMail = new System.Net.Mail.MailMessage();
+            MyMail.To.Add(EmailTo);
+            MyMail.Subject = EmailSubject;
+            MyMail.Body = EmailBody;
+            MyMail.IsBodyHtml = false;
+            var MySMTPClient = new SmtpClient();
+            MySMTPClient.EnableSsl = true;
+            MySMTPClient.UseDefaultCredentials = true;
+            MySMTPClient.Send(MyMail);
+        }
+
+        public static void GoogleSend(string EmailTo, string EmailSubject, string EmailBody)
+        {
+            var client = new SmtpClient("smtp.gmail.com", 587)
+            {
+                Credentials = new NetworkCredential("amacctarlac@gmail.com", "clangclang"),
+                EnableSsl = true
+            };
+
+            try
+            {
+                client.Send("amacctarlac@gmail.com", EmailTo, EmailSubject, EmailBody);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex.Message, "EMAIL");
+            }
+        }
+    }
+}
