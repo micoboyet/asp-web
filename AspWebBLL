@@ -1,0 +1,27 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using AspWebDAL;
+using AspWebModal;
+
+namespace AspWebBLL
+{
+    public class UsersBLL
+    {
+        public static List<UsersModal> PopulateGrid()
+        {
+            return UsersDAL.UsersList();
+        }
+
+        public static bool IsExistingUser(UsersModal items)
+        {
+            return UsersDAL.CheckExistingUser(items);
+        }
+
+        public static void AddNewUser(UsersModal items)
+        {
+            UsersDAL.AddNewUser(items);
+        }
+    }
+}
