@@ -1,0 +1,19 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AspWebModal
+{
+    public class UsersModal
+    {
+        public int userId { get; set; }
+        public string username { get; set; }
+        public string password { get; set; }
+        public string role { get; set; }
+        public string status { get; set; }
+        public string dateCreated { get; set; }
+        public string dateUpdated { get; set; }
+
+    }
+}
