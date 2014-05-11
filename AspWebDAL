@@ -1,0 +1,105 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data;
+using System.Data.SqlClient;
+using AspWebModal;
+using AspWebUtils;
+
+namespace AspWebDAL
+{
+    public class UsersDAL : DBConnection
+    {
+        static UsersModal items;
+
+        public static List<UsersModal> UsersList()
+        {
+            List<UsersModal> listItem = new List<UsersModal>();
+
+            try
+            {
+                SqlCommand sqlcmd = new SqlCommand();
+                sqlcmd.CommandText = "spUsersList";
+                sqlcmd.CommandType = CommandType.StoredProcedure;
+
+                SqlConnection con;
+                SqlDataReader dr = ExecuteDataReader(sqlcmd, out con);
+
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        //IFormatProvider provider = new System.Globalization.CultureInfo("en-CA", true);
+
+                        items = new UsersModal();
+                        items.userId = Convert.ToInt32(dr[0]);
+                        items.username = Convert.ToString(dr[1]);
+                        items.role = Convert.ToString(dr[2]);
+                        items.status = Convert.ToString(dr[3]);
+                        items.dateCreated = Convert.ToString(dr[4]);
+                        items.dateUpdated = Convert.ToString(dr[5]);
+
+                        listItem.Add(items);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex.Message, "UsersList");
+            }
+
+            return listItem;
+        }
+
+        public static bool CheckExistingUser(UsersModal items)
+        {
+            bool retval = false;
+
+            try
+            {
+                SqlCommand sqlcmd = new SqlCommand();
+                sqlcmd.CommandText = "spCheckExistingUser";
+                sqlcmd.CommandType = CommandType.StoredProcedure;
+
+                sqlcmd.Parameters.AddWithValue("@Username", items.username);
+                sqlcmd.Parameters.AddWithValue("@Password", items.password);
+
+                if (Convert.ToInt32(ExecuteScalar(sqlcmd)) == 0)
+                {
+                    retval = false;
+                }
+                else
+                {
+                    retval = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex.Message, "CheckExistingUser");
+            }
+
+            return retval;
+        }
+
+        public static void AddNewUser(UsersModal items)
+        {
+            try
+            {
+                SqlCommand sqlcmd = new SqlCommand();
+                sqlcmd.CommandText = "spAddNewUser";
+                sqlcmd.CommandType = CommandType.StoredProcedure;
+                sqlcmd.Parameters.AddWithValue("@Username", items.username);
+                sqlcmd.Parameters.AddWithValue("@Password", items.password);
+                sqlcmd.Parameters.AddWithValue("@Role", items.role);
+
+                ExecuteNonQuery(sqlcmd);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex.Message, "AddNewUser");
+            }
+        }
+    }
+}
