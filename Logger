@@ -1,0 +1,37 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
+
+namespace AspWebUtils
+{
+    public class Logger
+    {
+        static string logMessage = string.Empty;
+        static StreamWriter swlog;
+
+        #region [LOGGER '.log']
+        public static void WriteLog(string logMessage, string targetProject)
+        {
+            string dir = GetLogFolder();
+            swlog = new StreamWriter(dir + DateTime.Now.ToString("yyyy-MM-dd") + ".log", true);
+            swlog.WriteLine(DateTime.Now.ToString("hh:mm:ss") + " - " + targetProject + " - " + logMessage);
+            swlog.Close();
+        }
+
+        private static string GetLogFolder()
+        {
+            string retval = AppDomain.CurrentDomain.BaseDirectory + @"\Logs";
+
+            if (!retval.EndsWith(@"\"))
+                retval += @"\";
+
+            if (!Directory.Exists(retval))
+                Directory.CreateDirectory(retval);
+
+            return retval;
+        }
+        #endregion
+    }
+}
