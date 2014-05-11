@@ -1,0 +1,58 @@
+<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true"
+    CodeFile="Default.aspx.cs" Inherits="_Default" %>
+
+<asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
+</asp:Content>
+<asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
+    <h2>
+        Welcome to ASP.NET!
+    </h2>
+    <p>
+        To learn more about ASP.NET visit <a href="http://www.asp.net" title="ASP.NET Website">www.asp.net</a>.
+    </p>
+
+    <p>
+        <asp:GridView ID="UsersGridView" runat="server" GridLines="Both" AutoGenerateColumns="false">
+        <Columns>
+            <asp:TemplateField HeaderText="Checkbox" SortExpression="userId">
+                <EditItemTemplate>
+                    <asp:Label ID="Label1" runat="server" Text='<%# Eval("userId") %>'></asp:Label>
+                </EditItemTemplate>
+                <HeaderTemplate>
+                    <asp:CheckBox ID="chkSelectAll" runat="server" AutoPostBack="True"/>
+                </HeaderTemplate>
+                <ItemTemplate>
+                    <asp:CheckBox ID="chkSelect" runat="server" AutoPostBack="True"/>
+                    <asp:HiddenField ID="GroupId" runat="server" Value='<%# Eval("userId") %>' />
+                </ItemTemplate>
+                <HeaderStyle Width="10px" />
+            </asp:TemplateField>
+
+            <asp:BoundField DataField="username" HeaderText="USERNAME"
+                ItemStyle-HorizontalAlign="Center" >
+            <ItemStyle HorizontalAlign="Center" Width="200px" />
+            </asp:BoundField>
+
+            <asp:BoundField DataField="role" HeaderText="ROLE"
+                ItemStyle-HorizontalAlign="Center" >
+            <ItemStyle HorizontalAlign="Center" Width="200px" />
+            </asp:BoundField>
+
+            <asp:BoundField DataField="status" HeaderText="STATUS"
+                ItemStyle-HorizontalAlign="Center" >
+            <ItemStyle HorizontalAlign="Center" Width="200px" />
+            </asp:BoundField>
+
+            <asp:BoundField DataField="dateCreated" HeaderText="DATE CREATED"
+                ItemStyle-HorizontalAlign="Center" >
+            <ItemStyle HorizontalAlign="Center" Width="200px" />
+            </asp:BoundField>
+
+            <asp:BoundField DataField="dateUpdated" HeaderText="DATE UPDATED"
+                ItemStyle-HorizontalAlign="Center" >
+            <ItemStyle HorizontalAlign="Center" Width="200px" />
+            </asp:BoundField>
+        </Columns>
+        </asp:GridView>
+    </p>
+</asp:Content>
