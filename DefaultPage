@@ -49,4 +49,21 @@ public partial class _Default : System.Web.UI.Page
     {
         Response.Redirect("Default.aspx?id=" + HiddenFieldUserId.Value.ToString());
     }
+
+    private void DeleteItem()
+    {
+        if (UsersGridView.Rows.Count != 0)
+        {
+            CheckBox chk;
+            foreach (GridViewRow gvrow in UsersGridView.Rows)
+            {
+                chk = (CheckBox)gvrow.Cells[0].FindControl("chkSelect");
+                if (chk.Checked == true)
+                {
+                    //Convert.ToInt32(gvrow.Cells[1].Text);
+
+                }
+            }
+        }
+    }
 }
