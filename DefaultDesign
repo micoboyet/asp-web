@@ -3,6 +3,22 @@
 
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
+<script type="text/javascript">
+    function selectAll(invoker) {
+        var gridchk = document.getElementById("<%= UsersGridView.ClientID %>");
+        var final = gridchk.getElementsByTagName("input");
+
+        var chk = invoker;
+        for (var i = 0; i < final.length; i++) {
+            var myElement = final[i];
+            if (myElement.type == "checkbox" && myElement.id != chk) {
+                if (myElement.checked != invoker.checked) {
+                    myElement.click();
+                }
+            }
+        }
+    }
+</script>
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
     <h2>
@@ -22,11 +38,8 @@
                 AutoGenerateColumns="false" onrowcommand="UsersGridView_RowCommand">
             <Columns>
                 <asp:TemplateField HeaderText="Checkbox" SortExpression="userId">
-                    <EditItemTemplate>
-                        <asp:Label ID="Label1" runat="server" Text='<%# Eval("userId") %>'></asp:Label>
-                    </EditItemTemplate>
                     <HeaderTemplate>
-                        <asp:CheckBox ID="chkSelectAll" runat="server" AutoPostBack="True"/>
+                        <asp:CheckBox ID="chkSelectAll" runat="server" OnClick="selectAll(this)"/>
                     </HeaderTemplate>
                     <ItemTemplate>
                         <asp:CheckBox ID="chkSelect" runat="server" AutoPostBack="True"/>
