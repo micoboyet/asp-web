@@ -1,6 +1,7 @@
 <%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true"
     CodeFile="Default.aspx.cs" Inherits="_Default" %>
 
+
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
@@ -12,47 +13,101 @@
     </p>
 
     <p>
-        <asp:GridView ID="UsersGridView" runat="server" GridLines="Both" AutoGenerateColumns="false">
-        <Columns>
-            <asp:TemplateField HeaderText="Checkbox" SortExpression="userId">
-                <EditItemTemplate>
-                    <asp:Label ID="Label1" runat="server" Text='<%# Eval("userId") %>'></asp:Label>
-                </EditItemTemplate>
-                <HeaderTemplate>
-                    <asp:CheckBox ID="chkSelectAll" runat="server" AutoPostBack="True"/>
-                </HeaderTemplate>
-                <ItemTemplate>
-                    <asp:CheckBox ID="chkSelect" runat="server" AutoPostBack="True"/>
-                    <asp:HiddenField ID="GroupId" runat="server" Value='<%# Eval("userId") %>' />
-                </ItemTemplate>
-                <HeaderStyle Width="10px" />
-            </asp:TemplateField>
 
-            <asp:BoundField DataField="username" HeaderText="USERNAME"
-                ItemStyle-HorizontalAlign="Center" >
-            <ItemStyle HorizontalAlign="Center" Width="200px" />
-            </asp:BoundField>
+    <ajaxToolkit:ToolkitScriptManager ID="ajaxToolKit1" runat="server"></ajaxToolkit:ToolkitScriptManager>
+    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+        <ContentTemplate>
+        
+            <asp:GridView ID="UsersGridView" runat="server" GridLines="Both" 
+                AutoGenerateColumns="false" onrowcommand="UsersGridView_RowCommand">
+            <Columns>
+                <asp:TemplateField HeaderText="Checkbox" SortExpression="userId">
+                    <EditItemTemplate>
+                        <asp:Label ID="Label1" runat="server" Text='<%# Eval("userId") %>'></asp:Label>
+                    </EditItemTemplate>
+                    <HeaderTemplate>
+                        <asp:CheckBox ID="chkSelectAll" runat="server" AutoPostBack="True"/>
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <asp:CheckBox ID="chkSelect" runat="server" AutoPostBack="True"/>
+                        <asp:HiddenField ID="GroupId" runat="server" Value='<%# Eval("userId") %>' />
+                    </ItemTemplate>
+                    <HeaderStyle Width="10px" />
+                </asp:TemplateField>
 
-            <asp:BoundField DataField="role" HeaderText="ROLE"
-                ItemStyle-HorizontalAlign="Center" >
-            <ItemStyle HorizontalAlign="Center" Width="200px" />
-            </asp:BoundField>
+                <asp:BoundField DataField="username" HeaderText="USERNAME"
+                    ItemStyle-HorizontalAlign="Center" >
+                <ItemStyle HorizontalAlign="Center" Width="200px" />
+                </asp:BoundField>
 
-            <asp:BoundField DataField="status" HeaderText="STATUS"
-                ItemStyle-HorizontalAlign="Center" >
-            <ItemStyle HorizontalAlign="Center" Width="200px" />
-            </asp:BoundField>
+                <asp:BoundField DataField="role" HeaderText="ROLE"
+                    ItemStyle-HorizontalAlign="Center" >
+                <ItemStyle HorizontalAlign="Center" Width="200px" />
+                </asp:BoundField>
 
-            <asp:BoundField DataField="dateCreated" HeaderText="DATE CREATED"
-                ItemStyle-HorizontalAlign="Center" >
-            <ItemStyle HorizontalAlign="Center" Width="200px" />
-            </asp:BoundField>
+                <asp:BoundField DataField="status" HeaderText="STATUS"
+                    ItemStyle-HorizontalAlign="Center" >
+                <ItemStyle HorizontalAlign="Center" Width="200px" />
+                </asp:BoundField>
 
-            <asp:BoundField DataField="dateUpdated" HeaderText="DATE UPDATED"
-                ItemStyle-HorizontalAlign="Center" >
-            <ItemStyle HorizontalAlign="Center" Width="200px" />
-            </asp:BoundField>
-        </Columns>
-        </asp:GridView>
-    </p>
+                <asp:BoundField DataField="dateCreated" HeaderText="DATE CREATED"
+                    ItemStyle-HorizontalAlign="Center" >
+                <ItemStyle HorizontalAlign="Center" Width="200px" />
+                </asp:BoundField>
+
+                <asp:BoundField DataField="dateUpdated" HeaderText="DATE UPDATED"
+                    ItemStyle-HorizontalAlign="Center" >
+                <ItemStyle HorizontalAlign="Center" Width="200px" />
+                </asp:BoundField>
+
+                <asp:TemplateField ShowHeader="false" ItemStyle-Width="100px">
+                    <ItemTemplate>
+                        <asp:LinkButton ID="lnkEditButton" runat="server" CausesValidation="false" CommandArgument='<%# Eval("userId") %>' CommandName="EditUser" Text="Edit"></asp:LinkButton>
+                        <asp:LinkButton ID="lnkDeleteButton" runat="server" CausesValidation="false" CommandArgument='<%# Eval("userId") %>' CommandName="DeleteUser" Text="Delete"></asp:LinkButton>
+                    </ItemTemplate>
+                </asp:TemplateField>
+            </Columns>
+            </asp:GridView>
+        </p>
+
+        <!-- Hidden Fields -->
+        <asp:HiddenField ID="HiddenFieldUserId" runat="server" />
+
+        <!-- Target Controls -->
+        <asp:Button ID="DeleteButtonTarget" runat="server" Text="Delete" style="display:none;" />
+
+        <!-- AJAX Controls -->
+        <ajaxToolkit:ModalPopupExtender ID="DeleteModalExtender" runat="server" BackgroundCssClass="modalBackground"
+            CancelControlID="CancelButton" PopupControlID="DeletePanel"
+            TargetControlID="DeleteButtonTarget">
+        </ajaxToolkit:ModalPopupExtender>
+
+        <!-- Delete Light Box -->
+        <asp:Panel ID="DeletePanel" runat="server">
+            <div class="modalPopup">
+                <div align="left">
+                    <h3>
+                        Confirm</h3>
+                    <table>
+                        <tr>
+                            <td>
+                                Are you sure you want to delete the item?
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                         
+                                <asp:Button ID="DeleteButton" runat="server" Text="Delete" CssClass="modalButton" onclick="DeleteButton_Click" />
+                                <asp:Button ID="CancelButton" runat="server" CausesValidation="false" Text="Cancel" CssClass="modalButton" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </asp:Panel>    
+
+        </ContentTemplate>
+    </asp:UpdatePanel>
+
+
 </asp:Content>
